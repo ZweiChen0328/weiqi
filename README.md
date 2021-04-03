@@ -24,3 +24,4 @@
 > cd weiqi/
 
 > python weiqi.py
+"# weiqi" 
