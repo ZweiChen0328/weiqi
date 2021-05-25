@@ -179,8 +179,8 @@ class model(Tk):
 
 class Application(model):
     # 初始化棋盤,預設十九路棋盤
-    def __init__(self, my_mode_num=19):
-        model.__init__(self)
+    def __init__(self):
+        model.__init__(self,mode_num)
         # 幾個功能按钮
         self.startButton = Button(self, text='開始對局', command=self.start)
         self.startButton.place(x=420 * self.size, y=200 * self.size)
@@ -205,6 +205,7 @@ class Application(model):
         # 初始悔棋、停手按钮禁用
         self.passmeButton['state'] = DISABLED
         self.regretButton['state'] = DISABLED
+        self.territoryButton['state'] = DISABLED
         # 滑鼠移动時，呼叫shadow函式，显示随滑鼠移动的棋子
         self.canvas_bottom.bind('<Motion>', self.shadow)
         # 滑鼠左键单击時，呼叫getdown函式，放下棋子
@@ -216,6 +217,7 @@ class Application(model):
     def start(self):
         # 停手按鈕解除
         self.passmeButton['state'] = NORMAL
+        self.territoryButton['state'] = NORMAL
         # 删除右側太極圖
         self.canvas_bottom.delete(self.pW)
         self.canvas_bottom.delete(self.pB)
@@ -323,6 +325,7 @@ class Application(model):
             self.stop = True
             self.regretButton['state'] = DISABLED
             self.passmeButton['state'] = DISABLED
+            self.territoryButton['state'] = DISABLED
         self.canvas_bottom.delete('image')
         self.present = 0
         self.create_pB()
@@ -547,7 +550,7 @@ class Application(model):
 class Application2(model):
     # 初始化棋盤,預設十九路棋盤
     def __init__(self):
-        model.__init__(self)
+        model.__init__(self, mode_num)
         self.record = self.load_record()
         self.record_take = []
         self.record_next = []
@@ -555,11 +558,14 @@ class Application2(model):
         self.previousButton.place(x=420 * self.size, y=200 * self.size)
         self.nextButton = Button(self, text='下一手', command=self.nextMove)
         self.nextButton.place(x=420 * self.size, y=225 * self.size)
+        self.previousButton['state'] = DISABLED
         self.nextButton['state'] = DISABLED
         self.backButton = Button(self, text='返回', command=self.back)
         self.backButton.place(x=420 * self.size, y=250 * self.size)
         for r in self.record:
             self.getDown(r[0], r[1])
+        if not self.record==[]:
+            self.previousButton['state'] = NORMAL
 
     def getDown(self, x, y):
         self.positions[y][x] = self.present + 1
@@ -709,7 +715,7 @@ if __name__ == '__main__':
     while True:
         newApp = False
         newApp2 = False
-        app = Application(mode_num)
+        app = Application()
         app.title('圍棋')
         app.mainloop()
         if newApp2:
